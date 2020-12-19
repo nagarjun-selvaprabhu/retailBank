@@ -99,15 +99,15 @@ input[type="submit"]:active {
 				<form:input type="text" path="customerId" name="customerId"
 					value="${userId}" readonly="true" />
 				<form:input type="number" path="accountId" name="accountId"
-					placeholder="AccountId" />
+					placeholder="AccountId" autocomplete="off" />
 				<form:input type="number" path="currentBalance"
-					name="currentBalance" placeholder="Amount" value="0" />
-				<form:select type="text" path="accountType" placeholder="Account Type" name="accountType">
+					name="currentBalance" placeholder="Amount" value="0" autocomplete="off" />
+				<form:select type="text" path="accountType" placeholder="Account Type" name="accountType" autocomplete="off">
 					<form:option value="Savings"></form:option>
 					<form:option value="Current"></form:option>
 				</form:select>
 				<form:input type="text" path="ownerName" name="ownerName"
-					placeholder="OwnerName" />
+					placeholder="OwnerName" autocomplete="off" />
 
 				<input type="submit" name="signup_submit" value="Create" />
 
