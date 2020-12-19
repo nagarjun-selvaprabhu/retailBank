@@ -22,7 +22,8 @@ public class RulesServiceImpl implements RulesService {
 	public boolean evaluate(RulesInput account) {
 		int min=1000;
 	  //if balance should higher than minimum balance
-	    	if(Boolean.TRUE.equals(account.getCurrentBalance()>min))
+		double check = account.getCurrentBalance() - account.getAmount();
+	    	if(check >= min)
 	    		return true;
 	    	else
 	    		return false;

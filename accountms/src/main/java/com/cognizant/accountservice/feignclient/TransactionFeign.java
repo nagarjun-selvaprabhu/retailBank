@@ -38,7 +38,7 @@ public interface TransactionFeign {
 	 */
 	@PostMapping("/withdraw")
 	public boolean makeWithdraw(@RequestHeader("Authorization") String token,
-			@Valid @RequestBody AccountInput accountInput);
+			@Valid @RequestBody AccountInput accountInput) ;
 
 	
 	/*

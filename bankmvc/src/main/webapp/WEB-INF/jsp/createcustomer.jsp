@@ -1,3 +1,4 @@
+<%@page import="java.net.http.*"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -30,11 +31,8 @@ input[type=number] {
 		
 		
 	<%
-		response.setHeader("cache-control", "no-cache , no-store , must-revalidate");
-		response.setHeader("pragma", "no-cache");
-		response.setDateHeader("Expires", 0);
-
-		if (session.getAttribute("userId") == null || session.getAttribute("token") == null) {
+		
+		if (session == null) {
 	%>
 	<c:redirect url="/403.jsp" />
 	<%

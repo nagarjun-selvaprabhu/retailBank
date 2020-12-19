@@ -53,9 +53,8 @@ public class TransactionRestController {
 		log.info("inside transaction method");
 		if (transactionInput != null) {
 			boolean isComplete = transactionService.makeTransfer(token, transactionInput);
-			if (isComplete)
-				return true;
-			return true;
+			
+			return isComplete;
 		} else {
 			return false;
 		}
@@ -84,7 +83,7 @@ public class TransactionRestController {
 	 */
 	@PostMapping(value = "/withdraw")
 	public boolean makeWithdraw(@RequestHeader("Authorization") String token,
-			@Valid @RequestBody AccountInput accountInput) {
+			@Valid @RequestBody AccountInput accountInput){
 		transactionService.makeWithdraw(token, accountInput);
 		return true;
 	}

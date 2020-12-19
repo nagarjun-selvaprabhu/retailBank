@@ -13,7 +13,7 @@
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-        <title>Error 403</title>
+        <title>Error 500</title>
         <style>
             html,body{
                 height: 100%;
@@ -24,12 +24,12 @@
     
     <body class="d-flex align-items-center justify-content-center">
           <div class="row">
+              
              <div class="col">
-                    <img src="Images/403.jpg" alt="403 image" class="image-fluid" />
-                    <h1>Error 403</h1>
-                    <h3>Forbidden Error</h3>
-                    <h6>You does not have permission to access without Login.</h6>
-                    <a href="/">Click Here to login again</a>
+                 <img src="Images/404.jpg" alt="500 image" class="image-fluid">
+                    <h1 class="text-danger">HTTP Status ${errorcode}</h1>
+                    <p>${exception}</p>
+                 <h3>Sorry .....The request handler not available<a href="<c:url value="/"/>">Click here to return</a></h3>
         </div>
         </div>
     </body>

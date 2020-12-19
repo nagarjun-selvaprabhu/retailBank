@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,9 +26,10 @@
           <div class="row">
               
              <div class="col">
-                 <img src="Images/500.jfif" alt="500 image" class="image-fluid">
-                    <h1 class="text-danger">Error 500</h1>
-                 <h3>Oops! Something went wrong</h3>
+                 <img src="Images/500.png" alt="500 image" class="image-fluid">
+                    <h1 class="text-danger">HTTP Status ${errorcode} - Internal Server Error</h1>
+                    <p>${exception}</p>
+                 <h3>The request is not available to you<a href="<c:url value="/"/>">Click here to return</a></h3>
         </div>
         </div>
     </body>

@@ -15,8 +15,7 @@
 <!-- Bootstrap CSS -->
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-	crossorigin="anonymous">
+	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
 	integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
 	crossorigin="anonymous"></script>
@@ -86,50 +85,52 @@ input[type=number] {
 			<a class="btn btn-outline-light my-2 my-sm-0" href="/logout">Logout</a>&nbsp;&nbsp;
 		</div>
 	</nav>
-	
+	<br>
 		<h1 align="center">Welcome to ABC Bank</h1>
 	
 	<div class="row">
 
 		<div class="col-xs-12 col-sm-6 col-md-4">
-			<div style="margin: 1em 10em 2em 3em;">
+			<div style="margin: 5em 10em 2em 3em;">
 				<div class="card  " style="width: 400px; background-color: #f3d8d8">
 					<div class="card-body">
 						<h4 class="card-title">Create Customer</h4>
 						<p class="card-text">Click the button to create the customer</p>
 						<br> <a href="/createCustomer" class="btn btn-primary">Create</a>
 					</div>
+					<p id="message">${custmsg}</p>
 				</div>
 			</div>
 		</div>
 
 
 		<div class="col-xs-12 col-sm-6 col-md-4">
-			<div style="margin: 1em 10em 2em 3em;">
+			<div style="margin: 5em 10em 2em 3em;">
 				<div class="card" style="width: 400px; background-color: #f3d8d8">
 					<div class="card-body">
 						<h4 class="card-title">Create Account for Customer</h4>
 						<form action="/createAccount" method="post">
-							<input type="text" name="userId" placeholder="Enter the CustomerId" autocomplete="off"/>
+							<input type="text" name="customerId" placeholder="Enter the CustomerId" autocomplete="off"/>
 							<br> <br> <input type="submit" name="View" value="Create Account" class="btn btn-primary" />
 						</form>
+						<p id="message">${accmsg}</p>
 					</div>
 				</div>
 			</div>
 		</div>
 
   <div class="col-xs-12 col-sm-6 col-md-4">
-			<div style="margin: 1em 10em 2em 3em;">
+			<div style="margin: 5em 10em 2em 3em;">
 				<div class="card" style="width: 400px; background-color: #f3d8d8">
 					<div class="card-body">
 						<h4 class="card-title">Delete Customer</h4>
-						<form action="/deleteCustomer" method="get">
-							<input type="text" name="userId" id="userId" placeholder="Enter the UserId" autocomplete="off"/>
-							<br> <br> <input type="submit" name="Delete" value="Delete"
-								class="btn btn-primary" />
+						<form action="/deleteCustomer" method="post">
+							<input type="text" name="customerId" id="customerId" placeholder="Enter the customerId" autocomplete="off"/>
+							<br> <br> <input type="submit" name="Delete" value="Delete" class="btn btn-primary" />
 						</form>
+						<p id="message">${deletemsg}</p>
 					</div>
-
+					
 				</div>
 			</div>
 		</div>
@@ -139,7 +140,7 @@ input[type=number] {
 	<div class="row">
 
 		<div class="col-xs-12 col-sm-6 col-md-4">
-			<div style="margin: 1em 10em 14em 3em;">
+			<div style="margin: 4em 10em 14em 3em;">
 				<div class="card" style="width:400px;height:210px; background-color: #f3d8d8">
 					<div class="card-body">
 						<h4 class="card-title">View the Customer</h4>
@@ -155,7 +156,7 @@ input[type=number] {
 		</div>
 		
 		<div class="col-xs-12 col-sm-6 col-md-4">
-			<div style="margin: 1em 0em 0em 3em;">
+			<div style="margin: 4em 0em 0em 3em;">
 				<div class="card" style="width:400px;height:210px; background-color: #f3d8d8">
 					<div class="card-body">
 						<h4 class="card-title">Deposit Amount</h4>
@@ -171,17 +172,16 @@ input[type=number] {
 			</div>
 		</div>
         <div class="col-xs-12 col-sm-6 col-md-4">
-			<div style="margin: 1em 10em 14em 3em;">
+			<div style="margin: 4em 10em 14em 3em;">
 				<div class="card" style="width:400px;height:210px; background-color: #f3d8d8">
 					<div class="card-body">
 						<h4 class="card-title">Service Charge Detection</h4>
-                        <p class="card-text">Charges detected for non maintainence of minimum balance </p>
-						<form action="/viewCustomer" method="get">
-                         <input type="submit" name="View" value="View"
-								class="btn btn-primary" />
+                        <p class="card-text">Charges will be detected for not maintaining minimum balance </p>
+						<form action="/deductServiceTax" method="post">
+                         <input type="submit" name="View" value="View" class="btn btn-primary" />
 						</form>
+						<p id="message">${servicemsg}</p>
 					</div>
-
 				</div>
 			</div>
 		</div>

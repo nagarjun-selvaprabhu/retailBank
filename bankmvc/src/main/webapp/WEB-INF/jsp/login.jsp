@@ -16,13 +16,7 @@
 </head>
 <body>
 	
-	<%
-		if (session.getAttribute("userId") != null || session.getAttribute("token") != null) {
-	%>
-		<c:redirect url="/logoutPage" />
-	<%
-	}
-	%>
+
   <main class="d-flex align-items-center min-vh-100 py-3 py-md-0">
     <div class="container">
       <div class="card login-card">

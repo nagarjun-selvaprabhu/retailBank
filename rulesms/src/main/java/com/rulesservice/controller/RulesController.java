@@ -10,13 +10,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.rulesservice.feign.AccountFeign;
 import com.rulesservice.model.Account;
 import com.rulesservice.model.AccountInput;
 import com.rulesservice.model.MinimumBalanceException;
 import com.rulesservice.model.RulesInput;
-import com.rulesservice.model.ServiceResponse;
 import com.rulesservice.service.RulesService;
 
 @RestController
@@ -29,19 +27,18 @@ public class RulesController {
 	AccountFeign accountFeign;
 
 	// Check the minimum balance
-	@PostMapping("/evaluateMinBal")
 //	@HystrixCommand(groupKey = "retail bank", commandKey = "retail bank", fallbackMethod = "evalMinimumBalanceFallback")
-	public ResponseEntity<?> evaluate(@RequestHeader("Authorization") String token, @RequestBody RulesInput account)
+	@PostMapping("/evaluateMinBal")
+	public ResponseEntity<?> evaluate(@RequestBody RulesInput account)
 			throws MinimumBalanceException {
 		// Jwt token is checked
-		rulesService.hasPermission(token);
 		// check the accountId is Not null
-		if (account.getAccountId() == 0) {
+		if (account.getCurrentBalance()== 0) {
 			throw new MinimumBalanceException(INVALID);
 		} else {
 			boolean status = rulesService.evaluate(account);
 
-			return ResponseEntity.ok(status);
+			return new ResponseEntity<Boolean>(status,HttpStatus.OK);
 		}
 	}
 
@@ -56,7 +53,7 @@ public class RulesController {
 			List<Account> body = accountFeign.getAllacc(token).getBody();
 			for(Account acc:body) {
 				double detected=acc.getCurrentBalance()/10;
-				if(acc.getCurrentBalance()<2000 && acc.getCurrentBalance()-detected>0)
+				if(acc.getCurrentBalance()<2000 && (acc.getCurrentBalance()-detected)>0)
 					accountFeign.servicecharge(token, new AccountInput(acc.getAccountId(),detected));
 				
 			}

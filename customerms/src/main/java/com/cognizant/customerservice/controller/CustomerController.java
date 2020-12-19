@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cognizant.customerservice.feign.AuthorizationFeign;
@@ -66,7 +67,8 @@ public class CustomerController {  // /customer endpoint
 	}
 
 	@DeleteMapping("deleteCustomer/{id}")
-	public ResponseEntity<String> deleteCustomer(@RequestHeader("Authorization") String token, @PathVariable String id) {
+	@ResponseStatus(code = HttpStatus.OK)
+	public ResponseEntity<?> deleteCustomer(@RequestHeader("Authorization") String token, @PathVariable String id) {
 
 		customerService.hasEmployeePermission(token);
 
@@ -76,11 +78,10 @@ public class CustomerController {  // /customer endpoint
 			return new ResponseEntity<>("Customer Userid DOES NOT EXISTS", HttpStatus.NOT_ACCEPTABLE);
 		}
 
-		boolean deleteCustomer = customerService.deleteCustomer(id);
-		if (deleteCustomer)
-			return new ResponseEntity<>("Deleted SUCCESSFULLY", HttpStatus.OK);
-		else
-			return new ResponseEntity<>("Deleted UNSUCCESSFULLY", HttpStatus.FORBIDDEN);
+		System.out.println("Starting deletion of-->"+id);
+		customerService.deleteCustomer(id);
+		System.out.println("Deleted");
+		return new ResponseEntity<>("Deleted SUCCESSFULLY", HttpStatus.OK);
 	}
 
 	@GetMapping("/check") 

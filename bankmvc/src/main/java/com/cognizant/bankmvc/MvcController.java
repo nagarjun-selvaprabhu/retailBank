@@ -20,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.cognizant.bankmvc.feign.AccountFeign;
 import com.cognizant.bankmvc.feign.AuthenticationFeign;
 import com.cognizant.bankmvc.feign.CustomerFeign;
+import com.cognizant.bankmvc.feign.RulesFeign;
 import com.cognizant.bankmvc.feign.TransactionFeign;
 import com.cognizant.bankmvc.model.Account;
 import com.cognizant.bankmvc.model.AccountInput;
@@ -37,17 +38,35 @@ public class MvcController  {
 	private AuthenticationFeign authFeign;
 
 	@Autowired
-	private CustomerFeign custFeign;
+	private CustomerFeign customerFeign;
 
 	@Autowired
 	private AccountFeign accountFeign;
 
 	@Autowired
-	private TransactionFeign transFeign;
+	private TransactionFeign transactionFeign;
+	
+	@Autowired
+	private RulesFeign rulesFeign;
 
 	@RequestMapping("/")
-	public ModelAndView home(Model model) {
-		return new ModelAndView("home");
+	public ModelAndView home(HttpServletRequest request , Model model) {
+		try{		
+			request.getSession(false);
+			String role = (String) session.getAttribute("role");
+			if(role.equalsIgnoreCase("EMPLOYEE"))
+			{
+				return new ModelAndView("redirect:/dashboard");
+			}
+			else
+			{
+				return new ModelAndView("redirect:/customerdashboard");
+			}
+		}
+		catch(Exception e)
+		{
+			return new ModelAndView("home");			
+		}
 	}
 
 	@GetMapping("/employeelogin")
@@ -86,7 +105,7 @@ public class MvcController  {
 		session.setAttribute("userId", loginUser.getUserid());
 		session.setAttribute("token", token);
 		if (user.getRole().equalsIgnoreCase("CUSTOMER")) {
-			CustomerEntity customer = custFeign.getCustomerDetails(token, loginUser.getUserid());
+			CustomerEntity customer = customerFeign.getCustomerDetails(token, loginUser.getUserid());
 			System.out.println(customer);
 			model.addAttribute("customer", customer);
 			model.addAttribute("accountinput", new AccountInput());
@@ -102,22 +121,33 @@ public class MvcController  {
 	}
 
 	@GetMapping("/logout")
-	public String logout() {
-		if(session != null)
-		{
+	public ModelAndView logout(HttpServletRequest request) {
+		try{		
+			request.getSession(false);
 			session.removeAttribute("token");
 			session.removeAttribute("userId");
-			session.invalidate();			 
+			session.invalidate();		
+			return new ModelAndView("home");
 		}
-		return "redirect:/";
+		catch(Exception e)
+		{
+			return new ModelAndView("home");
+		}
 	}
 
 	@GetMapping("/createCustomer")
-	public ModelAndView createCustomer(@RequestParam(defaultValue = "") String msg,Model model) {
-		model.addAttribute("role", "EMPLOYEE");
-		model.addAttribute("msg", msg);
-		model.addAttribute("customer", new CustomerEntity());
-		return new ModelAndView("createcustomer");
+	public ModelAndView createCustomer(HttpServletRequest request,@RequestParam(defaultValue = "") String msg,Model model) {
+		try{		
+			request.getSession(false);
+			model.addAttribute("role", "EMPLOYEE");
+			model.addAttribute("msg", msg);
+			model.addAttribute("customer", new CustomerEntity());
+			return new ModelAndView("createcustomer");
+		}
+		catch(Exception e)
+		{
+			return new ModelAndView("home");
+		}
 	}
 
 	@GetMapping("/viewCustomer")
@@ -126,7 +156,7 @@ public class MvcController  {
 		try {
 			String id = request.getParameter("userId");
 			String token = (String) session.getAttribute("token");
-			CustomerEntity customer = custFeign.getCustomerDetails(token, id);
+			CustomerEntity customer = customerFeign.getCustomerDetails(token, id);
 			System.out.println(customer);
 			model.addAttribute("customer", customer);
 			return new ModelAndView("viewcustomer");
@@ -138,11 +168,19 @@ public class MvcController  {
 
 	@PostMapping("/createAccount")
 	public ModelAndView createAccount(HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) {
-		String id = request.getParameter("userId");
-		model.addAttribute("role", "EMPLOYEE");
-		model.addAttribute("id", id);
-		model.addAttribute("account", new Account());
-		return new ModelAndView("createaccount");
+		try {
+			String custid = request.getParameter("customerId");
+			String token = (String) session.getAttribute("token");
+			customerFeign.getCustomerDetails(token, custid);
+			model.addAttribute("role", "EMPLOYEE");
+			model.addAttribute("customerId", custid);
+			model.addAttribute("account", new Account());
+			return new ModelAndView("createaccount");			
+		}
+		catch(Exception e)
+		{
+			return new ModelAndView("redirect:/dashboard?accmsg=Invalid CustomerID");
+		}
 	}
 
 	@GetMapping("/403")
@@ -156,9 +194,9 @@ public class MvcController  {
 		model.addAttribute("role", "EMPLOYEE");
 		try {
 			String token = (String) session.getAttribute("token");
-			CustomerEntity createdCustomer = custFeign.saveCustomer(token, customer);
+			customerFeign.saveCustomer(token, customer);
 			model.addAttribute("role", "EMPLOYEE");
-			model.addAttribute("userId", customer.getUserid());
+			model.addAttribute("customerId", customer.getUserid());
 			model.addAttribute("account", new Account());
 			return new ModelAndView("createaccount");
 		} catch (Exception ex) {
@@ -174,7 +212,7 @@ public class MvcController  {
 		CustomerEntity customer = null;
 		try {
 			String token = (String) session.getAttribute("token");
-			customer = custFeign.getCustomerDetails(token, account.getCustomerId());
+			customer = customerFeign.getCustomerDetails(token, account.getCustomerId());
 		} catch (Exception ex) {
 			return new ModelAndView("redirect:/createAccount?msg=Invalid CustomerID");
 		}
@@ -189,9 +227,9 @@ public class MvcController  {
 			accountFeign.createAccount(token, account.getCustomerId(), account);
 		} catch (Exception ex) {
 			System.out.println("Failed to create");
-			return new ModelAndView("redirect:/createCustomer?msg=Account Not created");
+			return new ModelAndView("redirect:/createCustomer?accmsg=Account Not created");
 		}
-		return new ModelAndView("redirect:/dashboard?Accmsg=Account Created Successfully");
+		return new ModelAndView("redirect:/dashboard?accmsg=Account Created Successfully");
 	}
 
 	@PostMapping("/deposit")
@@ -212,7 +250,21 @@ public class MvcController  {
 	}
 
 	@GetMapping("/dashboard")
-	public ModelAndView showdashboard(@RequestParam(defaultValue = "") String msg, Model model) {
+	public ModelAndView showdashboard(@RequestParam(defaultValue = "",name = "msg") String msg,
+			@RequestParam(defaultValue = "",name = "custmsg") String custmsg ,
+			@RequestParam(defaultValue = "",name = "accmsg") String accmsg ,
+			@RequestParam(defaultValue = "",name = "deletemsg") String deletemsg ,
+			@RequestParam(defaultValue = "",name = "servicemsg") String servicemsg ,Model model) {
+		
+		if(session==null)
+		{
+			return new ModelAndView("redirect:/");
+		}
+		
+		model.addAttribute("custmsg", custmsg);
+		model.addAttribute("accmsg", accmsg);
+		model.addAttribute("deletemsg", deletemsg);
+		model.addAttribute("servicemsg", servicemsg);
 		model.addAttribute("msg", msg);
 		return new ModelAndView("dashboard");
 	}
@@ -222,7 +274,7 @@ public class MvcController  {
 		long accountId = Long.parseLong(request.getParameter("accountId"));
 		double amount = Double.parseDouble(request.getParameter("amount"));
 		AccountInput input = new AccountInput(accountId, amount);
-
+		System.out.println(accountId+"--->"+amount);
 		try {
 			String token = (String) session.getAttribute("token");
 			accountFeign.withdraw(token, input);
@@ -252,20 +304,27 @@ public class MvcController  {
 
 		try {
 			String token = (String) session.getAttribute("token");
-			accountFeign.transaction(token, transaction);
-			return new ModelAndView("redirect:/customerdashboard?transfermsg=Amount transfered from the Account");
+			String check = (String) accountFeign.transaction(token, transaction).getBody();
+			System.err.println(check);
+			return new ModelAndView("redirect:/customerdashboard?transfermsg="+check);
 		} catch (Exception ex) {
-
-			return new ModelAndView("redirect:/customerdashboard?transfermsg=Provide correct Details");
+			System.out.println("Error");
+			return new ModelAndView("redirect:/customerdashboard");
 		}
 	}
 
 	@GetMapping("/customerdashboard")
-	public ModelAndView showcustomerdashboard(@RequestParam(defaultValue = "") String msg, Model model) {
+	public ModelAndView showcustomerdashboard(@RequestParam(defaultValue = "",name = "msg") String msg,
+			@RequestParam(defaultValue = "",name = "transfermsg") String transfermsg , Model model) {
+		if(session==null)
+		{
+			return new ModelAndView("redirect:/403"); 
+		}
 		model.addAttribute("msg", msg);
+		model.addAttribute("transfermsg", transfermsg);
 		String token = (String) session.getAttribute("token");
 		String userId = (String) session.getAttribute("userId");
-		CustomerEntity customer = custFeign.getCustomerDetails(token, userId);
+		CustomerEntity customer = customerFeign.getCustomerDetails(token, userId);
 		System.out.println(customer);
 		model.addAttribute("customer", customer);
 		model.addAttribute("accountinput", new AccountInput());
@@ -282,15 +341,44 @@ public class MvcController  {
 		
 		String token = (String) session.getAttribute("token");
 		String userId = (String) session.getAttribute("userId");
-		CustomerEntity customer = custFeign.getCustomerDetails(token, userId);
+		CustomerEntity customer = customerFeign.getCustomerDetails(token, userId);
 		System.out.println(customer);
 		model.addAttribute("customer", customer);
 		model.addAttribute("accountinput", new AccountInput());
 		long accountId = Long.parseLong(request.getParameter("accountId"));
-		List<Transaction> transactions = transFeign.getTransactionsByAccId(token, accountId);
+		List<Transaction> transactions = transactionFeign.getTransactionsByAccId(token, accountId);
 		model.addAttribute("transactions", transactions);
 		return new ModelAndView("customerdashboard");
 	}
 
-
+	@PostMapping("/deleteCustomer")
+	public ModelAndView deleteCustomer(HttpServletRequest request,Model model)
+	{
+		try {
+			String token = (String) session.getAttribute("token");
+			String customerId = (String) request.getParameter("customerId");
+			System.out.println("Id--->"+customerId);
+			customerFeign.deleteCustomer(token, customerId);
+			return new ModelAndView("redirect:/dashboard?deletemsg=Customer Deleted Successfully");
+		}
+		catch(Exception e)
+		{
+			return new ModelAndView("redirect:/dashboard?deletemsg=Not Deleted..Wrong Customer ID");
+		}
+	}
+	
+	@PostMapping("/deductServiceTax")
+	public ModelAndView serviceCharges()
+	{
+		try {
+			String token = (String) session.getAttribute("token");
+			rulesFeign.serviceCharges(token);
+			return new ModelAndView("redirect:/dashboard?servicemsg=Service charges are deducted fro Min balance Accounts");
+		}
+		catch(Exception e)
+		{
+			return new ModelAndView("redirect:/dashboard?servicemsg=Not deducted...Error!!");
+		}
+		
+	}
 }

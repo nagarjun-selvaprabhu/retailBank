@@ -30,7 +30,7 @@ public class AccountserviceApplication {
 		return new Docket(DocumentationType.SWAGGER_2).select()
 				.apis(RequestHandlerSelectors.basePackage("com.cognizant.accountms.controller")).build().apiInfo(apiInfo());
 
-	} 
+	}  
 
 	private ApiInfo apiInfo() {
 		return new ApiInfo("Transaction Service", "MFPE project service", "API", "Terms of service",

@@ -1,6 +1,7 @@
 package com.cognizant.bankmvc.feign;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,4 +31,7 @@ public interface CustomerFeign {
 
 	@PostMapping("/updateCustomer")
 	public CustomerEntity updateCustomer(@RequestHeader("Authorization") String token,@Valid@RequestBody CustomerEntity customer);
+	
+	@DeleteMapping("deleteCustomer/{id}")
+	public String deleteCustomer(@RequestHeader("Authorization") String token, @PathVariable String id);
 }

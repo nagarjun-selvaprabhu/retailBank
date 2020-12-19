@@ -41,15 +41,12 @@ public class TransactionService implements TransactionServiceInterface {
 
 		long sourceAccountNumber = transactionInput.getSourceAccount().getAccountId();
 		sourceAccount = accountFeign.getAccount(token, sourceAccountNumber);
-		try {
-			Object body = ruleFeign.evaluate(token, new RulesInput(sourceAccount.getAccountId(),
+			Boolean check =  (Boolean) ruleFeign.evaluate(new RulesInput(sourceAccount.getAccountId(),
 					sourceAccount.getCurrentBalance(), transactionInput.getAmount())).getBody();
-			String name = body.toString();
-			if (!name.equalsIgnoreCase("true"))
+			//String name = body.toString();
+			if (check.booleanValue() == false)
 				throw new MinimumBalanceException("Minimum Balance 1000 should be maintaind");
-		} catch (Exception e) {
-		}
-
+		
 		long targetAccountNumber = transactionInput.getTargetAccount().getAccountId();
 		targetAccount = accountFeign.getAccount(token, targetAccountNumber);
 
@@ -71,6 +68,7 @@ public class TransactionService implements TransactionServiceInterface {
 		}
 		return false;
 	}
+		
 
 	/*
 	 * To check whether the amount is available
@@ -84,22 +82,19 @@ public class TransactionService implements TransactionServiceInterface {
 	 * Service layer method for making a withdraw
 	 */
 	@Override
-	public boolean makeWithdraw(String token, AccountInput accountInput) throws MinimumBalanceException {
+	public boolean makeWithdraw(String token, AccountInput accountInput) {
 		log.info("method to make a withdraw");
 		Account sourceAccount = null;
 
 		long accNumber = accountInput.getAccountId();
 		sourceAccount = accountFeign.getAccount(token, accNumber);
-		try {
-			Object body = ruleFeign.evaluate(token, new RulesInput(accountInput.getAccountId(),
-					sourceAccount.getCurrentBalance(), accountInput.getAmount())).getBody();
-			String bodyToString = body.toString();
-			if (!bodyToString.equalsIgnoreCase("true"))
+		
+			Boolean check = (Boolean) ruleFeign.evaluate(new RulesInput(accountInput.getAccountId(),
+					sourceAccount.getCurrentBalance(), accountInput.getAmount() ) ).getBody();
+			//String bodyToString = body.toString();
+			if (check.booleanValue() == false)
 				throw new MinimumBalanceException("Minimum Balance 1000 should be maintaind");
-		} catch (Exception e) {
-
-		}
-
+		
 		if (sourceAccount != null) {
 			Transaction transaction = new Transaction();
 			transaction.setSourceAccountId(sourceAccount.getAccountId());

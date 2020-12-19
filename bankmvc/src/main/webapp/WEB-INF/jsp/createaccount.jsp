@@ -9,7 +9,7 @@
 <link href="register.css" rel="stylesheet">
 <title>Create Customer</title>
 <style>
-        input::-webkit-outer-spin-button,
+input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
@@ -97,10 +97,10 @@ input[type="submit"]:active {
 				modelAttribute="account">
 
 				<form:input type="text" path="customerId" name="customerId"
-					value="${userId}" readonly="true" />
+					value="${customerId}" readonly="true" />
 				<form:input type="number" path="accountId" name="accountId"
 					placeholder="AccountId" autocomplete="off" />
-				<form:input type="number" path="currentBalance"
+				<form:input type="number" path="currentBalance" min="0"
 					name="currentBalance" placeholder="Amount" value="0" autocomplete="off" />
 				<form:select type="text" path="accountType" placeholder="Account Type" name="accountType" autocomplete="off">
 					<form:option value="Savings"></form:option>
@@ -112,7 +112,7 @@ input[type="submit"]:active {
 				<input type="submit" name="signup_submit" value="Create" />
 
 			</form:form>
-
+			<p> <a href="/dashboard?custmsg=Customer Created">Go Back</a> and create account Later....</p>
 		</div>
 
 
