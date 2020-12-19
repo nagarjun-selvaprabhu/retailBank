@@ -1,0 +1,27 @@
+version: 0.2
+phases:
+   install:
+      runtime-versions:
+         docker: 18
+   pre_build:
+      commands:
+      - echo "Entered the pre-build phase"
+      - $(aws ecr get-login  --no-include-email --region $AWS_REGION)
+   build:
+      commands:
+      - echo "Entered build phase"
+      - cd accountservice
+      - mvn compile
+      - mvn package
+      - mvn -DskipTests clean package
+      - echo " building docker image"
+      - docker build -t pod2-auth-registry:latest .
+      - docker tag pod2-auth-registry:latest 430321133782.dkr.ecr.us-east-2.amazonaws.com/pod2-auth-registry:pod2-account-td
+   post_build:
+      commands:
+      - echo "Entered the post-build phase"
+      - docker push 430321133782.dkr.ecr.us-east-2.amazonaws.com/pod2-auth-registry:pod2-account-td
+      - printf '[{"name":"account-container","imageUri":"%s"}]' 430321133782.dkr.ecr.us-east-2.amazonaws.com/pod2-auth-registry:pod2-account-td>taskdefinition.json
+artifacts:
+   files:
+   - accountservice/taskdefinition.json
