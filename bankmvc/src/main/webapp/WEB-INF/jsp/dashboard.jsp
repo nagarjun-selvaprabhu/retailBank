@@ -79,8 +79,7 @@ input[type=number] {
 	%>
 
 
-
-	<nav
+<nav
 		class="navbar navbar-expand-sm bg-secondary navbar-dark justify-content-between">
 		<div class="navbar-brand">ABC Bank</div>
 		<div class="form-inline">
@@ -93,8 +92,8 @@ input[type=number] {
 	<div class="row">
 
 		<div class="col-xs-12 col-sm-6 col-md-4">
-			<div style="margin: 5em 120em 14em 14em;">
-				<div class="card   " style="width: 400px; background-color: #f3d8d8">
+			<div style="margin: 1em 10em 2em 3em;">
+				<div class="card  " style="width: 400px; background-color: #f3d8d8">
 					<div class="card-body">
 						<h4 class="card-title">Create Customer</h4>
 						<p class="card-text">Click the button to create the customer</p>
@@ -106,8 +105,8 @@ input[type=number] {
 
 
 		<div class="col-xs-12 col-sm-6 col-md-4">
-			<div style="margin: 5em 0em 0em 30em;">
-				<div class="card   " style="width: 400px; background-color: #f3d8d8">
+			<div style="margin: 1em 10em 2em 3em;">
+				<div class="card" style="width: 400px; background-color: #f3d8d8">
 					<div class="card-body">
 						<h4 class="card-title">Create Account for Customer</h4>
 						<form action="/createAccount" method="post">
@@ -119,15 +118,29 @@ input[type=number] {
 			</div>
 		</div>
 
+  <div class="col-xs-12 col-sm-6 col-md-4">
+			<div style="margin: 1em 10em 2em 3em;">
+				<div class="card" style="width: 400px; background-color: #f3d8d8">
+					<div class="card-body">
+						<h4 class="card-title">Delete Customer</h4>
+						<form action="/deleteCustomer" method="get">
+							<input type="text" name="userId" id="userId" placeholder="Enter the UserId" autocomplete="off"/>
+							<br> <br> <input type="submit" name="Delete" value="Delete"
+								class="btn btn-primary" />
+						</form>
+					</div>
 
+				</div>
+			</div>
+		</div>
 	</div>
 
 
 	<div class="row">
 
 		<div class="col-xs-12 col-sm-6 col-md-4">
-			<div style="margin: -7em 120em 14em 14em;">
-				<div class="card" style="width: 400px; background-color: #f3d8d8">
+			<div style="margin: 1em 10em 14em 3em;">
+				<div class="card" style="width:400px;height:210px; background-color: #f3d8d8">
 					<div class="card-body">
 						<h4 class="card-title">View the Customer</h4>
 						<form action="/viewCustomer" method="get">
@@ -142,18 +155,33 @@ input[type=number] {
 		</div>
 		
 		<div class="col-xs-12 col-sm-6 col-md-4">
-			<div style="margin: -7em 0em 0em 30em;">
-				<div class="card   " style="width: 400px; background-color: #f3d8d8">
+			<div style="margin: 1em 0em 0em 3em;">
+				<div class="card" style="width:400px;height:210px; background-color: #f3d8d8">
 					<div class="card-body">
 						<h4 class="card-title">Deposit Amount</h4>
 						<form action="/deposit" method="post">
-							<input type="number"  name="accountId" placeholder="Enter the AccountId" autocomplete="off"/>	
+							<input type="number"  name="accountId" placeholder="Enter the AccountId" autocomplete="off"/><br>	
 							<input type="number" name="amount" placeholder="Enter the amount" autocomplete="off"/>
 							<br> <br> 
 							<input type="submit" name="View" value="Deposit Amount" class="btn btn-primary" />
 						</form>
 						<p id="message">${msg}</p>
 					</div>
+				</div>
+			</div>
+		</div>
+        <div class="col-xs-12 col-sm-6 col-md-4">
+			<div style="margin: 1em 10em 14em 3em;">
+				<div class="card" style="width:400px;height:210px; background-color: #f3d8d8">
+					<div class="card-body">
+						<h4 class="card-title">Service Charge Detection</h4>
+                        <p class="card-text">Charges detected for non maintainence of minimum balance </p>
+						<form action="/viewCustomer" method="get">
+                         <input type="submit" name="View" value="View"
+								class="btn btn-primary" />
+						</form>
+					</div>
+
 				</div>
 			</div>
 		</div>
