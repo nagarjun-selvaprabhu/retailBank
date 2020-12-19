@@ -9,17 +9,69 @@
 <link href="register.css" rel="stylesheet">
 <title>Create Customer</title>
 <style>
-input::-webkit-outer-spin-button,
+        input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-
 /* Firefox */
 input[type=number] {
   -moz-appearance: textfield;
 }
-</style>
+    input[type="text"],
+input[type="number"],
+select[type="text"]
+{
+  display: block;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+  padding: 4px;
+  width: 220px;
+  height: 32px;
+  border: none;
+  border-bottom: 1px solid #AAA;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  font-size: 15px;
+  transition: 0.2s ease;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus {
+  border-bottom: 2px solid #16a085;
+  color: #16a085;
+  transition: 0.2s ease;
+}
+
+input[type="submit"] {
+  margin-top: 28px;
+  width: 120px;
+  height: 32px;
+  background: #16a085;
+  border: none;
+  border-radius: 2px;
+  color: #FFF;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  text-transform: uppercase;
+  transition: 0.1s ease;
+  cursor: pointer;
+}
+
+input[type="submit"]:hover,
+input[type="submit"]:focus {
+  opacity: 0.8;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  transition: 0.1s ease;
+}
+
+input[type="submit"]:active {
+  opacity: 1;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  transition: 0.1s ease;
+}
+
+    </style>
 </head>
 <body>
 
@@ -40,6 +92,7 @@ input[type=number] {
 		<div id="login-box">
 
 			<h1 class="signup">Customer Account Creation</h1>
+			<br>
 			<form:form action="/finishedAccountCreation" method="post"
 				modelAttribute="account">
 
@@ -49,14 +102,14 @@ input[type=number] {
 					placeholder="AccountId" />
 				<form:input type="number" path="currentBalance"
 					name="currentBalance" placeholder="Amount" value="0" />
-				<form:select type="text" path="accountType" name="accountType">
+				<form:select type="text" path="accountType" placeholder="Account Type" name="accountType">
 					<form:option value="Savings"></form:option>
 					<form:option value="Current"></form:option>
 				</form:select>
 				<form:input type="text" path="ownerName" name="ownerName"
 					placeholder="OwnerName" />
 
-				<input type="submit" name="signup_submit" value="Create Account" />
+				<input type="submit" name="signup_submit" value="Create" />
 
 			</form:form>
 
