@@ -73,7 +73,7 @@ input[type="submit"]:active {
 
     </style>
 </head>
-<body>
+<body style=background-color:#ffe6ff >
 
 	<%
 		response.setHeader("cache-control", "no-cache , no-store , must-revalidate");
