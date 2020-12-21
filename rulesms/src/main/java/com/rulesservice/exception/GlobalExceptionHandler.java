@@ -14,8 +14,8 @@ import com.rulesservice.model.ErrorDetails;
 public class GlobalExceptionHandler {
 	
 	//NullPointerException
-			@ExceptionHandler(NullPointerException.class)
-			public ResponseEntity<?> nullPointer(NullPointerException exception, WebRequest request){
+			@ExceptionHandler(MinimumBalanceException.class)
+			public ResponseEntity<?> minBalance(MinimumBalanceException exception, WebRequest request){
 				ErrorDetails errorDetails = 
 						new ErrorDetails(exception.getMessage(), request.getDescription(false));
 				return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);

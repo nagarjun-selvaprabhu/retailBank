@@ -14,7 +14,7 @@ import lombok.Setter;
 public class AccountInput {
 	
 	/**
-	 *  Class used for inputing account info during transaction
+	 *  Class used for inputing account info during rules checking
 	 */
 	
 	@NotNull(message = "Account number is mandatory")

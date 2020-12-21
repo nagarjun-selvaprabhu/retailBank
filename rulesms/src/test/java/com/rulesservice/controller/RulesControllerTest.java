@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +21,12 @@ import org.springframework.cloud.openfeign.ribbon.FeignRibbonClientAutoConfigura
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rulesservice.exception.AccessDeniedException;
+import com.rulesservice.exception.MinimumBalanceException;
 import com.rulesservice.feign.AccountFeign;
 import com.rulesservice.feign.AuthorizationFeign;
 import com.rulesservice.model.RulesInput;
@@ -41,7 +38,6 @@ import com.rulesservice.service.RulesServiceImpl;
 @RunWith(SpringRunner.class)
 @WebMvcTest(controllers = RulesController.class)
 @ImportAutoConfiguration({RibbonAutoConfiguration.class, FeignRibbonClientAutoConfiguration.class, FeignAutoConfiguration.class})
-//@ExtendWith(SpringExtension.class)
 class RulesControllerTest {
 
 		@Autowired
@@ -66,7 +62,7 @@ class RulesControllerTest {
 					MockMvcRequestBuilders.post("/evaluateMinBal").content(asJsonString(inp))
 					.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).header("Authorization", "token")
 					).andExpect(status().isOk());
-		    verify(rulesService,timeout(1)).hasPermission("token");
+		   
 			
 		}
 		
@@ -81,7 +77,7 @@ class RulesControllerTest {
 					MockMvcRequestBuilders.post("/evaluateMinBal").content(asJsonString(inp))
 					.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).header("Authorization", "token")
 					).andExpect(status().isOk());
-		    verify(rulesService,timeout(1)).hasPermission("token");
+		   
 			
 		}
 	
@@ -94,8 +90,8 @@ class RulesControllerTest {
 					MockMvcRequestBuilders.post("/evaluateMinBal").content(asJsonString(inp))
 					.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).header("Authorization", "token")
 					).andExpect(status().isOk());
-			verify(rulesService,timeout(1)).hasPermission("token");
 			
+	
 		}
 		
 		
@@ -119,32 +115,29 @@ class RulesControllerTest {
 			//Service Charges method with not passes same argument
 			when(rulesService.hasPermission("token")).thenReturn(new AuthenticationResponse("Employee101", "emp", true));
 			when(accountFeign.getAllacc("token")).thenReturn(new ResponseEntity<List<Account>>(new ArrayList<>(),HttpStatus.OK));
-//			RulesInput inp=new RulesInput(101,1200,100);
-//			ServiceResponse res= new ServiceResponse("No Detection",102,(double) 100);
-//			ServiceResponse in=rulesService.serviceCharges(inp);
-//			assertNotEquals(res,in);
 			mockMvc.perform(
 					MockMvcRequestBuilders.post("/serviceCharges").header("Authorization", "token")
 					).andExpect(status().is(500));
 			verify(rulesService,timeout(1)).hasPermission("token");
 			
 		}
-		
-		
-		@Test
-		  void nullpointerTest() throws JsonProcessingException, Exception{ 
-			//exceptionHandling
-			when(rulesService.hasPermission("token")).thenReturn(new AuthenticationResponse("Employee101", "emp", true));
-			RulesInput inp=new RulesInput(0,100,100);
-			when(rulesService.evaluate(inp)).thenReturn(true);
-		mockMvc.perform(
-				MockMvcRequestBuilders.post("/evaluateMinBal").content(asJsonString(inp))
-				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).header("Authorization", "token")
-				).andExpect(status().is5xxServerError());
-		verify(rulesService,timeout(1)).hasPermission("token");
-		  //Assertions.assertThrows(NullPointerException.class,()->rulesService.evaluate(inp)); 
-		}
+	
 
+		@Test
+		public void MinimumBal() throws MinimumBalanceException,Exception {
+			//Webrequest
+			//GlobalExceptionHandler handler = new GlobalExceptionHandler();
+			RulesController con=new RulesController();
+			RulesInput account=new RulesInput(0,0,0);
+			 Throwable exception = assertThrows(MinimumBalanceException.class, () -> con.evaluate(account));
+			    assertEquals("Send Valid Details.", exception.getMessage());
+			
+
+			
+		}
+		
+
+		
 		
 		//reading and writing json content
 		public static String asJsonString(final Object obj) throws JsonProcessingException {

@@ -1,0 +1,58 @@
+-------------------------------------------------------------------------------
+Test set: com.rulesservice.controller.RulesControllerTest
+-------------------------------------------------------------------------------
+Tests run: 5, Failures: 3, Errors: 0, Skipped: 0, Time elapsed: 28.799 s <<< FAILURE! - in com.rulesservice.controller.RulesControllerTest
+evaluateTestNeg  Time elapsed: 2.044 s  <<< FAILURE!
+org.mockito.exceptions.verification.WantedButNotInvoked: 
+
+Wanted but not invoked:
+com.rulesservice.service.RulesServiceImpl#0 bean.hasPermission(
+    "token"
+);
+-> at com.rulesservice.controller.RulesControllerTest.evaluateTestNeg(RulesControllerTest.java:97)
+
+However, there was exactly 1 interaction with this mock:
+com.rulesservice.service.RulesServiceImpl#0 bean.evaluate(
+    com.rulesservice.model.RulesInput@3120495d
+);
+-> at com.rulesservice.controller.RulesController.evaluate(RulesController.java:39)
+
+
+	at com.rulesservice.controller.RulesControllerTest.evaluateTestNeg(RulesControllerTest.java:97)
+
+evaluateTestEqual  Time elapsed: 0.253 s  <<< FAILURE!
+org.mockito.exceptions.verification.WantedButNotInvoked: 
+
+Wanted but not invoked:
+com.rulesservice.service.RulesServiceImpl#0 bean.hasPermission(
+    "token"
+);
+-> at com.rulesservice.controller.RulesControllerTest.evaluateTestEqual(RulesControllerTest.java:84)
+
+However, there was exactly 1 interaction with this mock:
+com.rulesservice.service.RulesServiceImpl#0 bean.evaluate(
+    com.rulesservice.model.RulesInput@26ca12a2
+);
+-> at com.rulesservice.controller.RulesController.evaluate(RulesController.java:39)
+
+
+	at com.rulesservice.controller.RulesControllerTest.evaluateTestEqual(RulesControllerTest.java:84)
+
+evaluateTest  Time elapsed: 0.329 s  <<< FAILURE!
+org.mockito.exceptions.verification.WantedButNotInvoked: 
+
+Wanted but not invoked:
+com.rulesservice.service.RulesServiceImpl#0 bean.hasPermission(
+    "token"
+);
+-> at com.rulesservice.controller.RulesControllerTest.evaluateTest(RulesControllerTest.java:69)
+
+However, there was exactly 1 interaction with this mock:
+com.rulesservice.service.RulesServiceImpl#0 bean.evaluate(
+    com.rulesservice.model.RulesInput@60dcf9ec
+);
+-> at com.rulesservice.controller.RulesController.evaluate(RulesController.java:39)
+
+
+	at com.rulesservice.controller.RulesControllerTest.evaluateTest(RulesControllerTest.java:69)
+

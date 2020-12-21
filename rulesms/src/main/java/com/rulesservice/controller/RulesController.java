@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rulesservice.exception.MinimumBalanceException;
 import com.rulesservice.feign.AccountFeign;
 import com.rulesservice.model.Account;
 import com.rulesservice.model.AccountInput;
-import com.rulesservice.model.MinimumBalanceException;
 import com.rulesservice.model.RulesInput;
 import com.rulesservice.service.RulesService;
 
