@@ -209,7 +209,7 @@ public class AccountController {
 	 * This controller is called by Customer-Ms for Checking Balance in the Account
 	 */
 	@GetMapping("/find")
-	public ResponseEntity<List<Account>> getAllacc(@RequestHeader("Authorization") String token) {
+	public ResponseEntity<List<Account>> getAllAccount(@RequestHeader("Authorization") String token) {
 		accountServiceImpl.hasPermission(token);
 		List<Account> account = accountServiceImpl.getAllAccounts();
 		return new ResponseEntity<>(account, HttpStatus.OK);

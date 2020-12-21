@@ -69,10 +69,10 @@ class AccountControllerTest {
 	@Test
 	void createAccountTest() throws Exception {
 		when(accountServiceImpl.hasEmployeePermission("token"))
-				.thenReturn(new AuthenticationResponse("Cust101", "cust", true));
-		Account account = new Account();
+				.thenReturn(new AuthenticationResponse("Emp101", "emp", true));
+		Account account = new Account(1l, "CUST101", 3000.0, "Savings", "Samuel F", null);
 		when(accountServiceImpl.createAccount("Cust101", account))
-				.thenReturn(new AccountCreationStatus(1, "Created Sucessfully"));
+				.thenReturn(new AccountCreationStatus(1, "Sucessfully Created"));
 		mockMvc.perform(MockMvcRequestBuilders.post("/createAccount/Cust101").content(asJsonString(account))
 				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
 				.header("Authorization", "token")).andExpect(status().isNotAcceptable());
@@ -90,20 +90,28 @@ class AccountControllerTest {
 				.header("Authorization", "token")).andExpect(status().isOk());
 		verify(accountServiceImpl, timeout(1)).hasPermission("token");
 	}
+	
+	@Test
+	void  getAllAccountTest() throws Exception  {
+		when(accountServiceImpl.hasPermission("token")).thenReturn(new AuthenticationResponse("", "", true));
+		when(accountServiceImpl.getAllAccounts()).thenReturn(new ArrayList<>());
+		mockMvc.perform(get("/find").header("Authorization", "token")).andExpect(status().isOk());
+		verify(accountServiceImpl, timeout(1)).getAllAccounts();
+	}
 
-//	@Test
-//	void depositTest() throws Exception {
-//		AccountInput accInput=new AccountInput();
-//		Account account = new Account();
-//		List<Transaction> list=new ArrayList<>();
-//		when(accountServiceImpl.hasPermission("token")).thenReturn(new AuthenticationResponse("Cust101","cust",true));
-//		when(accountServiceImpl.updateDepositBalance(accInput)).thenReturn(account);
-//		when(transactionFeign.getTransactionsByAccId("token", accInput.getAccountId())).thenReturn(list);
-//		mockMvc.perform(MockMvcRequestBuilders.post("/deposit").content(asJsonString(accInput))
-//				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
-//				.header("Authorization", "token")).andExpect(status().isOk());
-//		verify(accountServiceImpl,timeout(1)).hasPermission("token");
-//	}
+	@Test
+	void depositTest() throws Exception {
+		AccountInput accInput=new AccountInput(1l,5000);
+		Account account = new Account(1l, "Cust101", 3000.0, "Savings", "Samuel F", null);
+		List<Transaction> list=new ArrayList<>();
+		when(accountServiceImpl.hasPermission("token")).thenReturn(new AuthenticationResponse("Cust101","cust",true));
+		when(accountServiceImpl.updateDepositBalance(accInput)).thenReturn(account);
+		when(transactionFeign.getTransactionsByAccId("token", accInput.getAccountId())).thenReturn(list);
+		mockMvc.perform(MockMvcRequestBuilders.post("/deposit").content(asJsonString(accInput))
+				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
+				.header("Authorization", "token")).andExpect(status().isOk());
+		verify(accountServiceImpl,timeout(1)).hasPermission("token");
+	}
 
 	public static String asJsonString(final Object obj) {
 		try {
