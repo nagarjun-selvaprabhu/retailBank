@@ -1,9 +1,12 @@
 package com.cognizant.customerservice.exception;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -65,4 +68,24 @@ public class GlobalExceptionHandler {
 
 	}
 
+	@ExceptionHandler(BindException.class)
+	protected HashMap<String, Object> handleBindException(BindException ex) {
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("key1", "Validation Error");
+		map.put("Exception", ex);
+		map.put("status", status);
+		return map;
+	}
+
+
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public HashMap<String, Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("key1", "Validation Error");
+		map.put("Exception", e);
+		map.put("status", status);
+		return map;
+	}
 }

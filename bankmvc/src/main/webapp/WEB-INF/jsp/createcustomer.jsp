@@ -32,9 +32,9 @@ input[type=number] {
 		
 	<%
 		
-		if (session == null) {
+		if (session.getAttribute("token") == null) {
 	%>
-	<c:redirect url="/403.jsp" />
+	<c:redirect url="/403" />
 	<%
 		}
 	%>

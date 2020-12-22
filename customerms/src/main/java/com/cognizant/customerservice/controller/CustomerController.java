@@ -1,5 +1,6 @@
 package com.cognizant.customerservice.controller;
 
+import java.net.BindException;
 import java.time.DateTimeException;
 
 import javax.validation.Valid;
@@ -7,6 +8,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,7 +33,11 @@ public class CustomerController {  // /customer endpoint
 	AuthorizationFeign authorizationFeign;   //auth feign
 
 	@PostMapping("/createCustomer")
-	public ResponseEntity<?> createCustomer(@RequestHeader("Authorization") String token,@Valid @RequestBody CustomerEntity customer) throws DateTimeException{
+	public ResponseEntity<?> createCustomer(@RequestHeader("Authorization") String token,@Valid @RequestBody CustomerEntity customer,BindingResult bindingResult) throws DateTimeException, BindException{
+		if(bindingResult.hasErrors())
+		{
+			throw new BindException();
+		}
 		customerService.hasEmployeePermission(token);
 		CustomerEntity customerEntity = customerService.createCustomer(token,customer);
 		if (customerEntity != null)

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,6 +49,12 @@ public class MvcController  {
 	
 	@Autowired
 	private RulesFeign rulesFeign;
+	
+	@GetMapping("/error")
+	public String error()
+	{
+		return "ERROR";
+	}
 
 	@RequestMapping("/")
 	public ModelAndView home(HttpServletRequest request , Model model) {
@@ -190,7 +197,7 @@ public class MvcController  {
 
 	@PostMapping("/finishedCustomerCreation")
 	public ModelAndView createAccountAndAccount(@ModelAttribute("customer") CustomerEntity customer, Model model,
-			RedirectAttributes redirectAttributes) {
+			RedirectAttributes redirectAttributes) throws MethodArgumentNotValidException {
 		model.addAttribute("role", "EMPLOYEE");
 		try {
 			String token = (String) session.getAttribute("token");
@@ -200,8 +207,8 @@ public class MvcController  {
 			model.addAttribute("account", new Account());
 			return new ModelAndView("createaccount");
 		} catch (Exception ex) {
-
-			return new ModelAndView("redirect:/createCustomer?msg=Account Not created");
+ 
+			return new ModelAndView("redirect:/createCustomer?msg=Not created");
 		}
 
 	}
