@@ -13,7 +13,7 @@
 		response.setHeader("pragma", "no-cache");
 		response.setDateHeader("Expires", 0);
 
-		if (session.getAttribute("userId") == null || session.getAttribute("token") == null) {
+		if (session.getAttribute("token") == null) {
 	%>
 	<c:redirect url="/403" />
 	<%

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.cognizant.bankmvc.exception.CustomerNotFoundException;
 import com.cognizant.bankmvc.feign.AccountFeign;
 import com.cognizant.bankmvc.feign.AuthenticationFeign;
 import com.cognizant.bankmvc.feign.CustomerFeign;
@@ -93,7 +94,7 @@ public class MvcController  {
 	}
 
 	@PostMapping("/login")
-	public ModelAndView login(@ModelAttribute("login") AppUser user, HttpServletRequest request, Model model) {
+	public ModelAndView login(@ModelAttribute("login") AppUser user, HttpServletRequest request, Model model) throws CustomerNotFoundException {
 		session = request.getSession();
 		String token = "Bearer ";
 		AppUser loginUser = null;
@@ -169,7 +170,7 @@ public class MvcController  {
 			return new ModelAndView("viewcustomer");
 		} catch (Exception ex) {
 
-			return null;
+			return new ModelAndView("redirect:/dashboard?viewmsg=Invalid CustomerID");
 		}
 	}
 
@@ -261,6 +262,7 @@ public class MvcController  {
 			@RequestParam(defaultValue = "",name = "custmsg") String custmsg ,
 			@RequestParam(defaultValue = "",name = "accmsg") String accmsg ,
 			@RequestParam(defaultValue = "",name = "deletemsg") String deletemsg ,
+			@RequestParam(defaultValue = "",name = "viewmsg") String viewmsg ,
 			@RequestParam(defaultValue = "",name = "servicemsg") String servicemsg ,Model model) {
 		
 		if(session==null)
@@ -269,6 +271,7 @@ public class MvcController  {
 		}
 		
 		model.addAttribute("custmsg", custmsg);
+		model.addAttribute("viewmsg", viewmsg);
 		model.addAttribute("accmsg", accmsg);
 		model.addAttribute("deletemsg", deletemsg);
 		model.addAttribute("servicemsg", servicemsg);

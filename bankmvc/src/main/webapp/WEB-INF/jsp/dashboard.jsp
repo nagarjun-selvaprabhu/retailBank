@@ -149,6 +149,7 @@ input[type=number] {
 							<br> <br> <input type="submit" name="View" value="View"
 								class="btn btn-primary" />
 						</form>
+						<p id="message">${viewmsg}</p>
 					</div>
 
 				</div>
@@ -178,7 +179,7 @@ input[type=number] {
 						<h4 class="card-title">Service Charge Detection</h4>
                         <p class="card-text">Charges will be detected for not maintaining minimum balance </p>
 						<form action="/deductServiceTax" method="post">
-                         <input type="submit" name="View" value="View" class="btn btn-primary" />
+                         <input type="submit" name="View" value="Deduct" class="btn btn-primary" />
 						</form>
 						<p id="message">${servicemsg}</p>
 					</div>

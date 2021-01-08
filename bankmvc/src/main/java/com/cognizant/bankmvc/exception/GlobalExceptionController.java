@@ -1,10 +1,12 @@
 package com.cognizant.bankmvc.exception;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 
 import javax.validation.ValidationException;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpServerErrorException.InternalServerError;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
+
 
 @RestControllerAdvice
 public class GlobalExceptionController{
@@ -26,6 +29,19 @@ public class GlobalExceptionController{
 		map.put("Exception", e);
 		map.put("status", status);
 		return map;
+	}
+	
+	@ExceptionHandler({ CustomerNotFoundException.class })
+	public ResponseEntity<CustomErrorResponse> handleConsumerNotFoundException(CustomerNotFoundException ex) {
+
+		CustomErrorResponse response = new CustomErrorResponse();
+		response.setTimestamp(LocalDateTime.now());
+		response.setMessage(ex.getMessage());
+		response.setStatus(HttpStatus.NOT_FOUND);
+		response.setReason("Invalid Consumer Id Provided");
+
+		return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+
 	}
 	
 	@ExceptionHandler(BindException.class)

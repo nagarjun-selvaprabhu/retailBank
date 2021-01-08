@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 
+import com.cognizant.bankmvc.exception.CustomerNotFoundException;
 import com.cognizant.bankmvc.model.CustomerEntity;
 
 import javax.validation.Valid;
@@ -24,7 +25,7 @@ public interface CustomerFeign {
 	public ResponseEntity<?> createCustomer(@RequestHeader("Authorization") String token,@RequestBody CustomerEntity customer);
 	
 	@GetMapping("/getCustomerDetails/{id}")
-	public CustomerEntity getCustomerDetails(@RequestHeader("Authorization") String token, @PathVariable(name="id") String id);
+	public CustomerEntity getCustomerDetails(@RequestHeader("Authorization") String token, @PathVariable(name="id") String id) throws CustomerNotFoundException;
 	
 	@PostMapping("/saveCustomer")
 	public CustomerEntity saveCustomer(@RequestHeader("Authorization") String token,@Valid@RequestBody CustomerEntity customer);
