@@ -34,7 +34,7 @@ public class AccountserviceApplication {
 
 	private ApiInfo apiInfo() {
 		return new ApiInfo("Transaction Service", "MFPE project service", "API", "Terms of service",
-				new Contact("Pratik", "", "pratik@email.com"), "License of API", "",Collections.emptyList());
+				new Contact("Pratik", "", "pratik99@email.com"), "License of API", "",Collections.emptyList());
 	}
 
 }
